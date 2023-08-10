@@ -1,10 +1,13 @@
-import React from 'react';
-import { useLoaderData } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLoaderData } from 'react-router-dom';
 import '../App.css';
 
 const Users = () => {
     
-    const users = useLoaderData();
+    const loadedusers = useLoaderData();
+    const [users, setUsers] = useState(loadedusers);
+
+
     const handleDeleteUser =_id =>{
          console.log('DeleteID', _id);
 
@@ -17,6 +20,8 @@ const Users = () => {
             console.log(data)
             if(data.deletedCount > 0){
                 alert("Data Delete Successfully ")
+                const remaining = users.filter(user => user._id !== _id)
+                setUsers(remaining);
             }
          })
     }
@@ -27,7 +32,11 @@ const Users = () => {
             {
                 users.map(user=> <p
                 key={user._id}
-                >{user.name} : {user.email} <button
+                >{user.name} : {user.email} 
+                 <Link to={`/update/${user._id}`}>
+                 <button>Update</button>
+                 </Link>
+                <button
                 onClick={()=>handleDeleteUser(user._id)}>X</button>
 
                 </p>)
